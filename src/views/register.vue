@@ -37,15 +37,27 @@ export default {
   },
   methods: {
     handleRegister () {
-      let saveobj = {
-        name: this.form.name,
-        password: this.form.password
+      if (this.form.name === 'mb@MY' && this.form.password === 'my@i-mybest') {
+        let saveobj = {
+          name: this.form.name,
+          password: this.form.password,
+
+        }
+        // this.$store.commit('saveUserinfo', save)
+        this.$store.dispatch('saveUserinfo', saveobj)
+        this.$router.push({
+          name: 'member-link', // 跳转到会员类型列表
+          query: {
+            bool: 'true' //判断下一页是否显示
+          }
+        })
+      } else {
+        this.$router.push({
+          name: 'member-link', // 跳转到会员类型列表
+        })
       }
-      // this.$store.commit('saveUserinfo', save)
-      this.$store.dispatch('saveUserinfo', saveobj)
-      this.$router.push({
-        name: 'member-link', // 跳转到会员类型列表
-      })
+
+
     }
   }
 }

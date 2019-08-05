@@ -2,6 +2,7 @@ module.exports = {
   devServer: {
     // 设置代理
     proxy: {
+      // /mock === https://mbstatistics.i-mybest.com
       "/mock": {
         target: "https://mbstatistics.i-mybest.com", // 域名
         // ws: false, // 是否启用websockets

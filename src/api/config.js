@@ -2,7 +2,11 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from '@/store'
+import { API_HOST } from '@/constants'
 Vue.use(VueAxios, axios)
+
+//再所有的请求前加的内容
+Vue.axios.defaults.baseURL = API_HOST
 
 /**
  * 显示loading
