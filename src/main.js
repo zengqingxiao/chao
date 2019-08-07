@@ -5,7 +5,8 @@ import router from './router/index.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-import constants from './constants'
+import './filters'
+import constants from './constants' // url配置
 
 Vue.use(ElementUI);
 // Vue.use(axios, VueAxios) 这里必须先写VueAxios 在写axios 这样的写法

@@ -2,17 +2,17 @@
   <div v-if="bool" class="memberLink">
     <h2>会员类型列表</h2>
     <div class="select-btn">
-      <el-button type="success" @click="visibleOpenNewMenberList = true">新增会员列表</el-button>
+      <el-button type="success" @click="handleNewMenberList">新增会员类型</el-button>
     </div>
     <el-table :data="userMessage" height="600" border style="width: 100%">
-      <el-table-column prop="MemberTypeID" label="日期"></el-table-column>
-      <el-table-column prop="MemberTypeName" label="姓名"></el-table-column>
+      <!-- <el-table-column prop="MemberTypeID" label="日期"></el-table-column> -->
+      <el-table-column prop="MemberTypeName" label="会员类型名称"></el-table-column>
       <!-- <el-table-column prop="address" label="地址"></el-table-column> -->
-      <el-table-column prop="operation" label="操作" width="150">
+      <el-table-column prop="operation" label="操作" width="300">
         <template slot-scope="scope">
-          <el-button @click="handleDetail(scope.row)" type="text" size="small">明细</el-button>
-          <el-button type="text" size="small" @click="handleAlter(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleUp(scope.row)">上传csv</el-button>
+          <el-button @click="handleDetail(scope.row)" type="text" size="small">会员消费统计</el-button>
+          <el-button type="text" size="small" @click="handleAlter(scope.row)">修改会员类型名称</el-button>
+          <el-button type="text" size="small" @click="handleUp(scope.row)">上传会员数据</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -30,7 +30,7 @@
     </el-dialog>
     <!-- 修改弹出框 -->
     <el-dialog title="修改会员列表" :visible.sync="visibleOpenAlterMenberList">
-      <el-form :model="formNewMember" label-width="140px">
+      <el-form :model="formAlterMember" label-width="140px">
         <el-form-item label="修改后的会员名称">
           <el-input v-model="formAlterMember.memberTypeName"></el-input>
         </el-form-item>
@@ -41,7 +41,7 @@
       </div>
     </el-dialog>
     <!-- 上传csv弹出框 -->
-    <el-dialog title="上传csv文件" :visible.sync="visibleOpenUp">
+    <el-dialog :title="fileTitle" :visible.sync="visibleOpenUp">
       <el-upload class="upload-demo" drag :action="upMemberTypeUrl" :data="fileList">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
@@ -96,6 +96,8 @@ export default {
         Password: 'my@i-mybest',
         memberTypeID: '', // 会员名称ID
       },
+      // 上传文件的title值
+      fileTitle: '',
       // 新增加会员列表,弹框是否显示
       visibleOpenNewMenberList: false,
       // 修改弹出框
@@ -123,6 +125,11 @@ export default {
           reject(e)
         }
       })
+    },
+    // 点击新增加会员类型
+    handleNewMenberList () {
+      this.formNewMember.memberTypeName = ''
+      this.visibleOpenNewMenberList = true;
     },
     // 点击明细
     handleDetail (item = {}) {
@@ -176,11 +183,12 @@ export default {
     },
     // 上传csv
     handleUp (item = {}) {
+      this.fileTitle = `上传 ${item.MemberTypeName} 会员类型csv文件`
       this.visibleOpenUp = true;
       this.fileList.memberTypeID = item.MemberTypeID //设置ID
     },
     // 上传csv弹出框确认按钮
-    handleOpenUp (obj = {}) {
+    handleOpenUp () {
       this.visibleOpenUp = false;
       window.console.log(this.fileList)
     }
