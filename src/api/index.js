@@ -1,6 +1,6 @@
 import { GET } from './config'
 
-const I_HEAD = ''
+const I_HEAD = '' // 目前暂时不需要
 /**
  * 获取会员列表
 */

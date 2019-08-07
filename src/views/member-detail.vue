@@ -43,7 +43,7 @@
     >
       <el-table-column prop="MemberTypeID" label="会员类型名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.MemberTypeID | typeTurnName(memberList) }}</span>
+          <span>{{ getTypeTurnName(scope.row.MemberTypeID) }}</span>
           <!-- <span>{{ scope.row.MemberTypeID }}</span> -->
         </template>
       </el-table-column>
@@ -130,12 +130,23 @@ export default {
     }
   },
   created () {
-    this.momberList(this.obj)
+    this.init();
+    // this.momberList(this.obj)
+    // 这里分离开来的目的也是一样的，就算init代表初始化，因为初始化不一定只是获取会员类型列，以后可能会有其他的功能所以要分开模块事件管理
   },
   components: {
 
   },
   methods: {
+    init () {
+      this.momberList(this.obj)
+    },
+
+    getTypeTurnName (val) {
+      const memeber = this.memberList.find(item => item.MemberTypeID === val) || {}
+      return memeber.MemberTypeName || ''
+    },
+
     // 获取会员类型列
     momberList (obj) {
       return new Promise(async (resolve, reject) => {
@@ -159,6 +170,7 @@ export default {
       }
     },
     // 点击查看按钮触发 这个函数后期应该调整 //统计会员消费记录
+    // 这个方法应该分离出来，应为只要时间，类型，点击查询，都是会触发的所以这个方法要分离
     exeAxync (obj) {
       return new Promise(async (resolve, reject) => {
         try {
@@ -203,6 +215,18 @@ export default {
         }
       }
     },
+    // 点击创建一个点击下载按钮
+    // 参数是aHref: 但是这里把aHref写成了全局参数
+    handleDownload () {
+      const $a = document.createElement('a')
+      $a.setAttribute('href', this.aHref)
+      $a.setAttribute('download', '下载')
+      window.console.log($a)
+      document.querySelector('body').appendChild($a)
+      $a.click()
+      $a.remove()
+
+    },
     // 点击下载
     handleDow (obj = {}) {
       this.btnLoading = true
@@ -216,15 +240,10 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           let { data } = await dowStatisticsAPI(obj);
+          // main 文件中有把Api_HOST写入到原型中
           this.aHref = `${this.$constants.API_HOST}${data.Data}`;
           // this.aHref = `https://mbstatistics.i-mybest.com${data.Data}`;
-          const $a = document.createElement('a')
-          $a.setAttribute('href', this.aHref)
-          $a.setAttribute('download', '下载')
-          window.console.log($a)
-          document.querySelector('body').appendChild($a)
-          $a.click()
-          $a.remove()
+          this.handleDownload(); // 将一些单独的方法分离开来
           resolve(data)
         } catch (e) {
           // 后面改

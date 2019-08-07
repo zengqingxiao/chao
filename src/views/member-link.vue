@@ -5,9 +5,7 @@
       <el-button type="success" @click="handleNewMenberList">新增会员类型</el-button>
     </div>
     <el-table :data="userMessage" height="600" border style="width: 100%">
-      <!-- <el-table-column prop="MemberTypeID" label="日期"></el-table-column> -->
       <el-table-column prop="MemberTypeName" label="会员类型名称"></el-table-column>
-      <!-- <el-table-column prop="address" label="地址"></el-table-column> -->
       <el-table-column prop="operation" label="操作" width="300">
         <template slot-scope="scope">
           <el-button @click="handleDetail(scope.row)" type="text" size="small">会员消费统计</el-button>
@@ -64,22 +62,16 @@ import { memberTypeAPI, addMemberTypeAPI, alterMemberTypeAPI } from '../api/inde
 export default {
   data () {
     return {
-
-      // 判断文件是否显示 hello - world
+      // 判断文件是否显示 'hello - world'
       bool: this.$route.query.bool,
-
       // 上传文件地址
       upMemberTypeUrl: `${this.$constants.API_HOST}/InputAPI.ashx`,
-      /**
-       * 用户name 和 mm
-       */
+      // 用户name 和 mm
       obj: {
         Account: 'mb@MY',
         Password: 'my@i-mybest'
       },
-      /**
-       * 接收会员列表数据
-       */
+      // 接收会员列表数据
       userMessage: [],
       // 新增加弹出框 form数据
       formNewMember: {
@@ -108,13 +100,18 @@ export default {
 
   },
   created () {
-    this.init(this.obj)
+    this.init()
   },
   components: {
 
   },
   methods: {
-    init (obj) {
+    init () {
+      this.handleMemberListShow(this.obj); // 这里分离开来，因为为handleMemberListShow()函数只是init中的一部分，以后如果需求增加说不定init默认还会渲染其他的东西
+    },
+    // 会员类型渲染
+    // 这里的obj是形参；this.obj是实参
+    handleMemberListShow (obj) {
       return new Promise(async (resolve, reject) => {
         try {
           let { data } = await memberTypeAPI(obj);

@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    // 设置代理
+    // 设置反向代理
     proxy: {
       // /mock === https://mbstatistics.i-mybest.com
       "/mock": {

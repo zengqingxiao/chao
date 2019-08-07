@@ -41,10 +41,9 @@ export default {
         let saveobj = {
           name: this.form.name,
           password: this.form.password,
-
         }
         // this.$store.commit('saveUserinfo', save)
-        this.$store.dispatch('saveUserinfo', saveobj)
+        this.$store.dispatch('saveUserinfo', saveobj) // 分发执行vuex中actions中的事件
         this.$router.push({
           name: 'member-link', // 跳转到会员类型列表
           query: {
@@ -56,8 +55,6 @@ export default {
           name: 'member-link', // 跳转到会员类型列表
         })
       }
-
-
     }
   }
 }

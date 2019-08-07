@@ -12,8 +12,8 @@ Vue.use(ElementUI);
 // Vue.use(axios, VueAxios) 这里必须先写VueAxios 在写axios 这样的写法
 Vue.config.productionTip = false
 
-Vue.$constants = constants
-Vue.prototype.$constants = constants
+Vue.$constants = constants // 外部使用
+Vue.prototype.$constants = constants // 内部使用，当vue new之后一样可以使用
 
 new Vue({
   router,

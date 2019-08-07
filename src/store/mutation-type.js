@@ -3,6 +3,7 @@
 // 所以在这里定义事件名那么我们就可以在这里改一次,mutations和actions就会同时被更改
 export default {
   SAVE_USERINFO: 'saveUserinfo', //保存用户信息 (name;password)
+  // 显示和隐藏loading
   SHOW_LOADING: 'showLoading',
   HIDE_LOADING: 'hideLoading'
 }

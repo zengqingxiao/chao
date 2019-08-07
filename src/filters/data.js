@@ -4,11 +4,9 @@ export default {
    * value ID
    * obj 会员类型对象
    */
-  typeTurnName (value, arr) {
-
-    return arr.find((item) => {
-      return item.MemberTypeID === value
-    }).MemberTypeName
-
-  }
+  // typeTurnName (value, arr) {
+  //   return arr.find((item) => {
+  //     return item.MemberTypeID === value
+  //   }).MemberTypeName
+  // }
 }

@@ -35,7 +35,7 @@ function hideLoading (loading) {
  * @param {*} options
  */
 export const apiRequest = ({ url, type = 'post', data = {}, ...options } = {}) => {
-  const datas = type === 'get' ? { params: data } : { data: data }
+  const datas = type === 'get' ? { params: data } : { data: data } // 给后台传递数据的字段不一样
   const loading = options.loading === undefined ? true : options.loading // loading默认开启
   showLoading(loading)
   return axios.request({
