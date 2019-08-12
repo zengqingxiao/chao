@@ -4,16 +4,32 @@
     <div class="select-btn">
       <el-button type="success" @click="handleNewMenberList">新增会员类型</el-button>
     </div>
-    <el-table :data="userMessage" height="600" border style="width: 100%">
-      <el-table-column prop="MemberTypeName" label="会员类型名称"></el-table-column>
-      <el-table-column prop="operation" label="操作" width="300">
-        <template slot-scope="scope">
-          <el-button @click="handleDetail(scope.row)" type="text" size="small">会员消费统计</el-button>
-          <el-button type="text" size="small" @click="handleAlter(scope.row)">修改会员类型名称</el-button>
-          <el-button type="text" size="small" @click="handleUp(scope.row)">上传会员数据</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-row class="tac">
+      <el-col :span="4">
+        <el-menu default-active="1" class="el-menu-vertical-demo" @select="handleSelect">
+          <el-menu-item index="1">
+            <i class="el-icon-menu"></i>
+            <span slot="title">会员类型列表</span>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <i class="el-icon-document"></i>
+            <span slot="title">会员统计列表</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :span="20">
+        <el-table :data="userMessage" height="600" border style="width: 100%">
+          <el-table-column prop="MemberTypeName" label="会员类型名称"></el-table-column>
+          <el-table-column prop="operation" label="操作" width="350">
+            <template slot-scope="scope">
+              <el-button @click="handleDetail(scope.row)" type="text" size="small">会员消费统计列表</el-button>
+              <el-button type="text" size="small" @click="handleAlter(scope.row)">修改会员类型名称</el-button>
+              <el-button type="text" size="small" @click="handleUp(scope.row)">上传会员数据</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
     <!-- 这里的sync是修饰符: 将visibleOpenNewMenberList值传进去，子监听，传值给父亲，父亲不用监听事件直接将值给了visibleOpenNewMenberList -->
     <el-dialog title="新增会员列表明细" :visible.sync="visibleOpenNewMenberList">
       <el-form :model="formNewMember" label-width="100px">
@@ -128,10 +144,30 @@ export default {
       this.formNewMember.memberTypeName = ''
       this.visibleOpenNewMenberList = true;
     },
+    // 添加按钮弹出框点击确认
+    handleOpenAdd (obj = {}) {
+      // 添加其他字段
+      let newObj = Object.assign(obj, {
+        MemberTypeName: this.formNewMember.memberTypeName
+      })
+      if (!newObj) return false
+      this.visibleOpenNewMenberList = false;
+      return new Promise(async (resolve, reject) => {
+        try {
+          let { data } = await addMemberTypeAPI(newObj);
+          resolve(data)
+        } catch (e) {
+          reject(e)
+        }
+      }).then(() => {
+        // 这里要分离出来以免语义问题
+        this.init(this.obj);
+      })
+    },
     // 点击明细
     handleDetail (item = {}) {
       this.$router.push({
-        name: 'member-datail',
+        name: 'member-detail',
         query: {
           id: item.MemberTypeID
         }
@@ -158,26 +194,6 @@ export default {
         this.init(obj);
       })
     },
-    // 添加按钮弹出框点击确认
-    handleOpenAdd (obj = {}) {
-      // 添加其他字段
-      let newObj = Object.assign(obj, {
-        MemberTypeName: this.formNewMember.memberTypeName
-      })
-      if (!newObj) return false
-      this.visibleOpenNewMenberList = false;
-      return new Promise(async (resolve, reject) => {
-        try {
-          let { data } = await addMemberTypeAPI(newObj);
-          resolve(data)
-        } catch (e) {
-          reject(e)
-        }
-      }).then(() => {
-        // 这里要分离出来以免语义问题
-        this.init(this.obj);
-      })
-    },
     // 上传csv
     handleUp (item = {}) {
       this.fileTitle = `上传 ${item.MemberTypeName} 会员类型csv文件`
@@ -188,6 +204,17 @@ export default {
     handleOpenUp () {
       this.visibleOpenUp = false;
       window.console.log(this.fileList)
+    },
+    // 点击侧边导航
+    handleSelect (key, keyPath) {
+      if (key === '2') {
+        this.$router.push({
+          name: 'member-detail',
+          query: {
+            id: '1'
+          }
+        })
+      }
     }
 
   }
@@ -204,6 +231,11 @@ export default {
     padding: 10px 20px;
     text-align: right;
     background-color: white;
+  }
+
+  .el-menu-vertical-demo {
+    height: 600px;
+    text-align: left;
   }
 }
 </style>

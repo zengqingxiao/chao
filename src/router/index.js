@@ -29,7 +29,7 @@ export default new Router({
     },
     {
       path: '/member-detail',
-      name: 'member-datail',
+      name: 'member-detail',
       component: () => import('../views/member-detail.vue'),
       meta: {
         title: '会员列表详细'

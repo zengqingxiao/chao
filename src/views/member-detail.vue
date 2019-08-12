@@ -1,6 +1,6 @@
 <template>
   <div class="memberDatali">
-    <h2>会员统计明细列表</h2>
+    <h2>会员统计列表</h2>
     <div class="select-btn">
       <el-form ref="form" :model="form" label-width="100px" :inline="true" :rules="rules">
         <el-form-item label="会员类型：">
@@ -19,6 +19,7 @@
             type="date"
             placeholder="选择日期"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间：" prop="EndDate">
@@ -34,24 +35,40 @@
         <el-button type="success" @click="handleDow(form)" ref="bowA" :loading="btnLoading">下载</el-button>
       </el-form>
     </div>
-    <el-table
-      :data="memberPagData"
-      border
-      class="elTable"
-      v-loading="loading"
-      element-loading-text="拼命加载中"
-    >
-      <el-table-column prop="MemberTypeID" label="会员类型名称">
-        <template slot-scope="scope">
-          <span>{{ getTypeTurnName(scope.row.MemberTypeID) }}</span>
-          <!-- <span>{{ scope.row.MemberTypeID }}</span> -->
-        </template>
-      </el-table-column>
-      <el-table-column prop="TaobaoID" label="淘宝ID"></el-table-column>
-      <el-table-column prop="TotalOrderPayment" label="消费金额"></el-table-column>
-      <el-table-column prop="TotalOrderCount" label="消费订单数"></el-table-column>
-      <el-table-column prop="TotalProducts" label="购买商品明细"></el-table-column>
-    </el-table>
+    <el-row class="tac">
+      <el-col :span="4">
+        <el-menu default-active="2" class="el-menu-vertical-demo" @select="handleSelect">
+          <el-menu-item index="1">
+            <i class="el-icon-menu"></i>
+            <span slot="title">会员类型列表</span>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <i class="el-icon-document"></i>
+            <span slot="title">会员统计列表</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :span="20">
+        <el-table
+          :data="memberPagData"
+          border
+          class="elTable"
+          v-loading="loading"
+          element-loading-text="拼命加载中"
+        >
+          <el-table-column width="120" prop="MemberTypeID" label="会员类型名称">
+            <template slot-scope="scope">
+              <span>{{ getTypeTurnName(scope.row.MemberTypeID) }}</span>
+              <!-- <span>{{ scope.row.MemberTypeID }}</span> -->
+            </template>
+          </el-table-column>
+          <el-table-column prop="TaobaoID" label="淘宝ID" width="120"></el-table-column>
+          <el-table-column prop="TotalOrderPayment" width="120" label="消费金额" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="TotalOrderCount" width="120" label="消费订单数" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="TotalProducts" label="购买商品明细" show-overflow-tooltip></el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
     <div class="paging">
       <!-- 
       // @size-change pageSize 改变时会触发，默认参数val当前页多少条
@@ -130,6 +147,7 @@ export default {
     }
   },
   created () {
+    // window.console.log(this)
     this.init();
     // this.momberList(this.obj)
     // 这里分离开来的目的也是一样的，就算init代表初始化，因为初始化不一定只是获取会员类型列，以后可能会有其他的功能所以要分开模块事件管理
@@ -250,6 +268,19 @@ export default {
           window.console.warn(e)
         }
       })
+    },
+    // 点击侧边导航
+    handleSelect (key, keyPath) {
+      //console.log('我点击了', key)
+      if (key === '1') {
+        //console.log('我进去了', key)
+        this.$router.push({
+          name: 'member-link',
+          query: {
+            bool: 'true' //判断下一页是否显示
+          }
+        })
+      }
     }
   }
 }
@@ -261,10 +292,13 @@ export default {
   text-align: center;
 
   .elTable {
-    width: 100%;
-    min-height: 520px;
+    // width: 100%;
+    min-height: 574px;
   }
-
+  .el-menu-vertical-demo {
+    height: 574px;
+    text-align: left;
+  }
   .select-btn {
     margin: 5px 0;
     padding: 10px 20px;
